@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Deploy Manager</h2>
+
+{% if status %}
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+        Error run build for trigger {{ trigger_id }} and commit hash {{ commit_hash }}: {{ error }}
+        </div>
+    {% else %}
+        <div class="alert alert-success" role="alert">
+          Build trigger {{ trigger_id }} triggered with commit hash {{ commit_hash }}. Status: {{ status }}
+        </div>
+    {% endif %}
+{%  endif %}
+
+<p class="lead">Please select environment and set <strong>GIT Commit Hash</strong></p>
+<form class="needs-validation" method="post" action=".">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="triggerId">Build trigger</label>
+            <select class="custom-select" id="triggerId" name="trigger_id" required>
+                {% for trigger in triggers %}
+                    <option value="{{ trigger.id }}">{{ trigger.description }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="commitHash">Commit Hash</label>
+            <input type="text" class="form-control" id="commitHash" name="commit_hash" placeholder="" value="" required>
+        </div>
+    </div>
+
+    <hr class="mb-4">
+    <button class="btn btn-primary btn-lg btn-block" type="submit">Run trigger</button>
+</form>
+{% endblock %}
